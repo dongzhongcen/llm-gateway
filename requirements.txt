@@ -5,3 +5,4 @@ httpx
 pyyaml
 python-dotenv
 langfuse
+pytest
