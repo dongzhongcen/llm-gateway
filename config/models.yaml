@@ -1,0 +1,29 @@
+# config/models.yaml —— 改这里，不改代码
+aliases:
+  qa-fast:        # 文档问答默认走这个，temperature 0.2 在客户端定，网关不改
+    model: deepseek-flash
+    provider: deepseek
+    fallback: [qwen-plus]        # 主模型失败才切，别一上来就轮询
+    timeout_seconds: 30
+    max_retries: 2
+
+  qa-quality:     # 问答里需要更稳的回答时，客户端把 model 改成这个别名
+    model: qwen-plus
+    provider: qwen
+    fallback: [deepseek-flash]
+    timeout_seconds: 45
+    max_retries: 2
+
+  chat-default:   # stage1 命令行助手默认走这个
+    model: deepseek-flash
+    provider: deepseek
+    fallback: [qwen-plus]
+    timeout_seconds: 30
+    max_retries: 2
+
+budgets:
+  default_daily_token_limit: 200000
+  default_daily_cost_limit_usd: 2.0   # 先设一个小上限，跑超了网关直接拒并提示
+
+# 注意：deepseek-chat 已不在 DeepSeek 官方价格表上，用它会报 404，
+# 所以 fallback 别写 deepseek-chat，写 qwen-plus。
